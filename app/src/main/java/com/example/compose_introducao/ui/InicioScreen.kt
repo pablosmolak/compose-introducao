@@ -13,9 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun InicioScreen(){
+fun InicioScreen(
+    navController: NavController
+){
     Surface (
         color = Color.LightGray,
         modifier = Modifier.fillMaxSize(),
@@ -25,15 +28,11 @@ fun InicioScreen(){
            horizontalAlignment = Alignment.CenterHorizontally
        ){
            Text("Não Autenticado")
-           OutlinedButton(onClick = {}){
+           OutlinedButton(onClick = {
+               navController.navigate("login")
+           }){
                Text("Minha Conta")
            }
        }
     }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun InicioScreenPreview() {
-   InicioScreen()
 }

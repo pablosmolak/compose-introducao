@@ -10,29 +10,39 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.compose_introducao.ui.InicioScreen
+import com.example.compose_introducao.ui.LoginScreen
 import com.example.compose_introducao.ui.theme.ComposeintroducaoTheme
+import com.example.composeintroduoaula.ui.MinhaContaScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeintroducaoTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "inicio"
                 ) {
-                    InicioScreen()
+                    composable("login"){
+                        LoginScreen(navController)
+                    }
+
+                    composable("inicio"){
+                        InicioScreen(navController)
+                    }
+
+                    composable("minha-conta"){
+                        MinhaContaScreen(navController)
+                    }
                 }
+
             }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-   InicioScreen()
 }

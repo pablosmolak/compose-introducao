@@ -1,60 +1,138 @@
-package com.example.compose_introducao.ui
+package com.example.composeintroduoaula.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.compose_introducao.R
 
 @Composable
-fun MinhaContaScreen(){
-    Surface (
-        color = Color.LightGray,
+fun MinhaContaScreen(
+    navController: NavController
+) {
+    val showAlert = remember { mutableStateOf(false)  }
+
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-    ){
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            "Minha conta",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Box(
+            modifier = Modifier.padding(16.dp)
+        ) {
             AsyncImage(
-                model = "https://minhabiblioteca.com.br/wp-content/uploads/2021/04/logo-IFRO.png",
-                contentDescription = "logo do IFRO",
+                model = "https://lh3.googleusercontent.com/a/ACg8ocJPRoERYDoH5WkGDsN8DJKVHLj6iOQ7K5qCUBTFbE8z3WY=s288-c-no",
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(top = 160.dp, bottom = 100.dp)
-                    .size(200.dp)
+                    .size(140.dp)
+                    .clip(CircleShape)
             )
 
+            Button(
+                onClick = {
+
+                },
+                shape = CircleShape,
+                contentPadding = PaddingValues(0.dp),
+                modifier= Modifier
+                    .size(50.dp)
+                    .align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_edit),
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+        }
+
+        Text(
+            "Pablo Smolak",
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Text(
+            "pablosmolak@gmail.com",
+            style = TextStyle(
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                color = Color.Gray
+            )
+        )
+
+        Button(
+            onClick = {
+                showAlert.value = true
+            },
+            modifier = Modifier.padding(top = 24.dp)
+        ) {
+            Text("Sair")
         }
     }
-}
 
-@Preview(showSystemUi = true)
-@Composable
-fun MinhaContaScreenPreview() {
-    MinhaContaScreen()
+    if (showAlert.value) {
+        AlertDialog(
+            onDismissRequest = {
+                showAlert.value = false
+            },
+            title = {
+                Text(text = "Deseja realmente sair?")
+            },
+            text = {
+                Text("Não será possível acessar informações e receber notificações pessoais.")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+
+                        showAlert.value = false
+                        navController.navigate("inicio")
+                    }
+                ) {
+                    Text("Sair")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        showAlert.value = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
 }
