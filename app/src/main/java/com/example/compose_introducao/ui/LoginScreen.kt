@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -43,10 +44,11 @@ import org.jetbrains.annotations.Async
 fun LoginScreen(
     navController: NavController
 ){
-    val viewModel = viewModel<AuthViewModel>()
+    val authViewModel = hiltViewModel<AuthViewModel>()
 
     var email by remember { mutableStateOf("")}
     var senha by remember { mutableStateOf("")}
+    var error by remember { mutableStateOf("")}
 
     Surface (
         color = Color.LightGray,
@@ -68,6 +70,10 @@ fun LoginScreen(
                     .padding(top = 160.dp, bottom = 100.dp)
                     .size(200.dp)
             )
+            
+            if(error.isNotBlank()){
+                Text(text = error)
+            }
 
             OutlinedTextField(
                 value = email,
@@ -91,14 +97,14 @@ fun LoginScreen(
             )
             Button(
                 onClick = {
-                          viewModel.login(
+                          authViewModel.login(
                               email,
                               senha,
                               onSuccess = {
                                   navController.navigate("minha-conta")
                               },
-                              onError = {
-
+                              onError = {message ->
+                                  error = message
                               }
                               
                           )
