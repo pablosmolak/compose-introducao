@@ -116,9 +116,15 @@ fun LoginScreen(
                 colors = ButtonDefaults.buttonColors(
                     Color.Black
                 )
-            ){
+            ) {
                 Text("Entrar")
             }
+
+
+        }
+
+        if(authViewModel.loading.value){
+            LoadingScreen()
         }
     }
 }

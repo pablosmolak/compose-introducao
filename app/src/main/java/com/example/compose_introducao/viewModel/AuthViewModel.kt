@@ -15,7 +15,7 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val appDataStore: AppDataStore
 ): ViewModel() {
-
+    val loading = mutableStateOf(false)
     fun login (
         user: String,
         senha: String,
@@ -32,20 +32,26 @@ class AuthViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch {
-            delay(2000)
-            appDataStore.putBollean(AppDataStoreKeys.AUTENTICADO, true).apply {
-                onSuccess()
+        if(senha == "1" && user == "1"){
+            loading.value = true
+            viewModelScope.launch {
+                delay(1000)
+                appDataStore.putBollean(AppDataStoreKeys.AUTENTICADO, true).apply {
+                    onSuccess()
+                }
             }
+        }else{
+            onError("Usuário ou senha incorretos!")
         }
 
     }
 
-    fun Logout(
+    fun logout(
         onSuccess: () -> Unit
     ){
-
+        loading.value = true
         viewModelScope.launch {
+            delay(500)
             appDataStore.putBollean(AppDataStoreKeys.AUTENTICADO, false).apply {
                 onSuccess()
             }
