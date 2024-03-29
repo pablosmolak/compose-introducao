@@ -2,7 +2,7 @@ package com.example.compose_introducao.api.response
 
 import com.example.compose_introducao.api.model.Usuario
 
-class LoginResponseBody (
-    var _id: String = "",
+data class LoginResponseBody (
+    var token: String = "",
     var usuario: Usuario
 )
