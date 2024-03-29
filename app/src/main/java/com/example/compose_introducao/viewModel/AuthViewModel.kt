@@ -6,12 +6,16 @@ import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImagePainter
 import com.example.compose_introducao.api.AuthEndPoint
 import com.example.compose_introducao.api.request.LoginRequestBody
+import com.example.compose_introducao.api.response.LoginResponseBody
 import com.example.compose_introducao.datastore.AppDataStore
 import com.example.compose_introducao.datastore.AppDataStoreKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
@@ -53,24 +57,45 @@ class AuthViewModel @Inject constructor(
 
 
         viewModelScope.launch {
-            val callback
-            delay(1000)
+            val callback = endpoint.login(requestBody)
+
+            callback.enqueue(object : Callback<LoginResponseBody> {
+                override fun onFailure(call: Call<LoginResponseBody>, t: Throwable) {
+                    if (t.message.isNullOrBlank()) {
+                        onError("No fail message avaliable")
+                    } else {
+                        onError(t.message!!)
+                    }
+                }
+
+                override fun onResponse(
+                    call: Call<LoginResponseBody>,
+                    response: Response<LoginResponseBody>
+                ) {
+                    onSuccess()
+                    println(response.code())
+
+                    if(response.isSuccessful) {
+                        println(response.body()!!.token)
+                    }
+                }
+            })
+
             appDataStore.putBollean(AppDataStoreKeys.AUTENTICADO, true).apply {
                 onSuccess()
             }
-
-
         }
 
-        fun logout(
-            onSuccess: () -> Unit
-        ) {
-            loading.value = true
-            viewModelScope.launch {
-                delay(500)
-                appDataStore.putBollean(AppDataStoreKeys.AUTENTICADO, false).apply {
-                    onSuccess()
-                }
+
+    }
+    fun logout(
+        onSuccess: () -> Unit
+    ) {
+        loading.value = true
+        viewModelScope.launch {
+            delay(500)
+            appDataStore.putBollean(AppDataStoreKeys.AUTENTICADO, false).apply {
+                onSuccess()
             }
         }
     }
